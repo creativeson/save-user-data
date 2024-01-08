@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Home - My Flask App{% endblock %}
+
+{% block content %}
+    <h2>Welcome to the Home Page</h2>
+    <p>This is the home page content.</p>
+    <form id="tracking-form" action="/contact" method="GET">
+        <button type="button" id="track-button">Track</button>
+    </form>
+    
+    <script>
+    document.getElementById("track-button").addEventListener("click", function() {
+        var data = {
+            user_ip: '...', // 從後端獲取或使用 JavaScript
+            user_agent: navigator.userAgent,
+            action: 'click',
+            accepted_languages: navigator.language,
+            url: window.location.href,
+            local_time: new Date().toLocaleString(),
+            button_id: 'track-button',
+            click_to_url: '/contact'
+        };
+    
+        fetch('/track_click', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    
+        window.location.href = '/contact'; // 導航到目標頁面
+    });
+    </script>
+    
+{% endblock %}
